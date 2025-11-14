@@ -36,19 +36,19 @@ export default function SeoProgress() {
   return (
     <div className="min-h-screen py-12 px-4">
       <div className="max-w-5xl mx-auto">
-        <div className="text-center mb-10">
-          <p className="text-blue-400 font-semibold uppercase tracking-wide mb-2">Track Your Campaign</p>
-          <h1 className="text-4xl font-bold text-white mb-4">SEO Progress Tracker</h1>
-          <p className="text-gray-300 max-w-2xl mx-auto">
+        <div className="text-center mb-8 sm:mb-10 px-4">
+          <p className="text-blue-400 font-semibold uppercase tracking-wide mb-2 text-sm sm:text-base">Track Your Campaign</p>
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-4">SEO Progress Tracker</h1>
+          <p className="text-gray-300 max-w-2xl mx-auto text-sm sm:text-base">
             Enter the unique key shared by our admin team to view the status, recent updates, and completion timeline of
             your SEO boost engagement.
           </p>
         </div>
 
-        <div className="glass-effect p-8 mb-8">
+        <div className="glass-effect p-4 sm:p-6 md:p-8 mb-8">
           <form onSubmit={handleSubmit} className="space-y-4">
             <label className="block text-sm text-gray-400">Unique Progress Key</label>
-            <div className="flex flex-col md:flex-row gap-4">
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
               <input
                 type="text"
                 value={uniqueKey}

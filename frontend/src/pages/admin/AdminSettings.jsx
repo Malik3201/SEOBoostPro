@@ -47,13 +47,13 @@ export default function AdminSettings() {
   return (
     <div className="min-h-screen py-12 px-4">
       <div className="max-w-4xl mx-auto">
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold gradient-text mb-2">Platform Settings</h1>
-          <p className="text-gray-400">Update contact channels and service defaults.</p>
+        <div className="mb-6 sm:mb-8 px-4">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold gradient-text mb-2">Platform Settings</h1>
+          <p className="text-gray-400 text-sm sm:text-base">Update contact channels and service defaults.</p>
         </div>
 
-        <div className="glass-effect p-8">
-          <h2 className="text-2xl font-semibold text-white mb-6">WhatsApp Contact</h2>
+        <div className="glass-effect p-4 sm:p-6 md:p-8">
+          <h2 className="text-xl sm:text-2xl font-semibold text-white mb-4 sm:mb-6">WhatsApp Contact</h2>
           {loading ? (
             <p className="text-gray-400">Loading settings...</p>
           ) : (

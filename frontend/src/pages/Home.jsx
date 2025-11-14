@@ -63,16 +63,16 @@ export default function Home() {
               <SpeedIcon className="w-12 h-12 text-white" />
             </div>
           </div>
-          <h1 className="text-5xl md:text-6xl font-bold mb-4 gradient-text">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 gradient-text">
             SEOBoostPro
           </h1>
-          <p className="text-xl text-gray-300">
+          <p className="text-base sm:text-lg md:text-xl text-gray-300 px-4">
             Analyze your website's SEO performance in seconds
           </p>
         </div>
 
         {/* Audit Form */}
-        <div className="glass-effect p-8 md:p-10">
+        <div className="glass-effect p-4 sm:p-6 md:p-8 lg:p-10">
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
               <label htmlFor="url" className="block text-sm font-medium mb-2 text-gray-200">

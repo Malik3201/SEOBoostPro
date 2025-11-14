@@ -67,8 +67,8 @@ export default function AdminReports() {
               <ReportIcon className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h1 className="text-4xl font-bold gradient-text mb-2">All Reports</h1>
-              <p className="text-gray-400">Total: {pagination.total} reports</p>
+              <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold gradient-text mb-2">All Reports</h1>
+              <p className="text-gray-400 text-sm sm:text-base">Total: {pagination.total} reports</p>
             </div>
           </div>
         </div>
@@ -100,14 +100,14 @@ export default function AdminReports() {
                 reports.map((report, idx) => (
                   <div
                     key={report._id}
-                    className="glass-effect p-6 hover:bg-white/10 transition-all cursor-pointer animate-slide-in group"
+                    className="glass-effect p-4 sm:p-6 hover:bg-white/10 transition-all cursor-pointer animate-slide-in group"
                     style={{ animationDelay: `${idx * 0.05}s` }}
                     onClick={() => navigate(`/audit/${report._id}`)}
                   >
-                    <div className="flex items-center justify-between">
-                      <div className="flex-1 min-w-0">
-                        <h3 className="text-lg font-semibold mb-2 text-blue-300 truncate group-hover:text-blue-200 transition-colors">{report.url}</h3>
-                        <div className="flex items-center gap-4 text-sm text-gray-400 flex-wrap">
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                      <div className="flex-1 min-w-0 w-full sm:w-auto">
+                        <h3 className="text-base sm:text-lg font-semibold mb-2 text-blue-300 break-words sm:truncate group-hover:text-blue-200 transition-colors">{report.url}</h3>
+                        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4 text-xs sm:text-sm text-gray-400">
                           <span>
                             Created: {new Date(report.createdAt).toLocaleDateString()} {new Date(report.createdAt).toLocaleTimeString()}
                           </span>
@@ -116,11 +116,11 @@ export default function AdminReports() {
                           </span>
                         </div>
                       </div>
-                      <div className="text-right ml-4">
-                        <div className={`text-4xl font-bold ${getScoreColor(report.score)}`}>
+                      <div className="text-left sm:text-right w-full sm:w-auto sm:ml-4">
+                        <div className={`text-3xl sm:text-4xl font-bold ${getScoreColor(report.score)}`}>
                           {report.score}
                         </div>
-                        <div className="text-sm text-gray-400">Score</div>
+                        <div className="text-xs sm:text-sm text-gray-400">Score</div>
                       </div>
                     </div>
                   </div>

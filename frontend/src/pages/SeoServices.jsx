@@ -79,20 +79,20 @@ export default function SeoServices() {
   return (
     <div className="min-h-screen py-12 px-4">
       <div className="max-w-6xl mx-auto">
-        <div className="mb-12 text-center">
-          <p className="text-blue-400 font-semibold uppercase tracking-wide mb-2">Premium SEO Partnership</p>
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
+        <div className="mb-8 sm:mb-12 text-center px-4">
+          <p className="text-blue-400 font-semibold uppercase tracking-wide mb-2 text-sm sm:text-base">Premium SEO Partnership</p>
+          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4">
             Personalized SEO Boost Services
           </h1>
-          <p className="text-gray-300 max-w-2xl mx-auto">
+          <p className="text-gray-300 max-w-2xl mx-auto text-sm sm:text-base">
             Let our experts manage your SEO operations with tailored strategies. Confirm your website, select how long we
             should manage your SEO, and we&lsquo;ll take care of the rest.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
-          <div className="glass-effect p-8">
-            <h2 className="text-2xl font-semibold text-white mb-6">Your Website &amp; Timeline</h2>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-10">
+          <div className="glass-effect p-4 sm:p-6 md:p-8">
+            <h2 className="text-xl sm:text-2xl font-semibold text-white mb-4 sm:mb-6">Your Website &amp; Timeline</h2>
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
                 <label htmlFor="url" className="block text-sm text-gray-400 mb-2">

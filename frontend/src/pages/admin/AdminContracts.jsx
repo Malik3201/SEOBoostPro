@@ -71,9 +71,9 @@ export default function AdminContracts() {
   return (
     <div className="min-h-screen py-12 px-4">
       <div className="max-w-7xl mx-auto">
-        <div className="mb-10">
-          <h1 className="text-4xl font-bold gradient-text mb-2">Service Contracts</h1>
-          <p className="text-gray-400">Track, start, and complete SEO boost engagements.</p>
+        <div className="mb-6 sm:mb-10 px-4">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold gradient-text mb-2">Service Contracts</h1>
+          <p className="text-gray-400 text-sm sm:text-base">Track, start, and complete SEO boost engagements.</p>
         </div>
 
         {loading ? (
@@ -89,7 +89,7 @@ export default function AdminContracts() {
                 <div className="glass-effect p-12 text-center text-gray-400">No service contracts yet.</div>
               ) : (
                 contracts.map((contract) => (
-                  <div key={contract._id} className="glass-effect p-6">
+                  <div key={contract._id} className="glass-effect p-4 sm:p-6">
                     <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
                       <div className="flex-1 min-w-0">
                         <p className="text-sm text-gray-400 mb-1">Website</p>

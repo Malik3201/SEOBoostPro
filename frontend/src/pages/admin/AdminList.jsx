@@ -42,8 +42,8 @@ export default function AdminList() {
               <UsersIcon className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h1 className="text-4xl font-bold gradient-text mb-2">Admin List</h1>
-              <p className="text-gray-400">Total: {admins.length} administrators</p>
+              <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold gradient-text mb-2">Admin List</h1>
+              <p className="text-gray-400 text-sm sm:text-base">Total: {admins.length} administrators</p>
             </div>
           </div>
         </div>
@@ -74,22 +74,22 @@ export default function AdminList() {
               admins.map((admin, idx) => (
                 <div
                   key={admin._id}
-                  className="glass-effect p-6 animate-slide-in hover:bg-white/5 transition-all"
+                  className="glass-effect p-4 sm:p-6 animate-slide-in hover:bg-white/5 transition-all"
                   style={{ animationDelay: `${idx * 0.05}s` }}
                 >
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 flex items-center justify-center text-xl font-bold text-white shadow-lg">
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                    <div className="flex items-center gap-3 sm:gap-4">
+                      <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 flex items-center justify-center text-lg sm:text-xl font-bold text-white shadow-lg">
                         {admin.email.charAt(0).toUpperCase()}
                       </div>
                       <div>
-                        <h3 className="text-lg font-semibold text-white">{admin.email}</h3>
-                        <p className="text-sm text-gray-400">
+                        <h3 className="text-base sm:text-lg font-semibold text-white break-words">{admin.email}</h3>
+                        <p className="text-xs sm:text-sm text-gray-400">
                           Joined: {new Date(admin.createdAt).toLocaleDateString()}
                         </p>
                       </div>
                     </div>
-                    <div className="px-4 py-2 bg-blue-500/20 text-blue-400 border border-blue-500/30 rounded-full text-sm font-semibold">
+                    <div className="px-3 sm:px-4 py-1.5 sm:py-2 bg-blue-500/20 text-blue-400 border border-blue-500/30 rounded-full text-xs sm:text-sm font-semibold">
                       Admin
                     </div>
                   </div>

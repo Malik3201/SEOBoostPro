@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { reportAPI } from '../config/api';
 import Loading from '../components/Loading';
-import { SpeedIcon, AnalyticsIcon, SuggestionIcon, MobileIcon, DesktopIcon, ArrowLeftIcon, ErrorIcon } from '../components/icons';
+import { SpeedIcon, AnalyticsIcon, SuggestionIcon, MobileIcon, DesktopIcon, ArrowLeftIcon, ErrorIcon, DownloadIcon } from '../components/icons';
+import { generateAuditPDF } from '../utils/pdfGenerator';
 
 export default function AuditResult() {
   const { id } = useParams();
@@ -94,6 +95,16 @@ export default function AuditResult() {
     return 'bg-red-500/10 border-red-500/30';
   };
 
+  const handleDownloadPDF = () => {
+    if (!report) return;
+    try {
+      generateAuditPDF(report);
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+      alert('Failed to generate PDF. Please try again.');
+    }
+  };
+
   return (
     <div className="min-h-screen py-12 px-4">
       <div className="max-w-6xl mx-auto">
@@ -106,20 +117,20 @@ export default function AuditResult() {
             <ArrowLeftIcon className="w-5 h-5 mr-2 group-hover:-translate-x-1 transition-transform" />
             Back to Home
           </button>
-          <h1 className="text-4xl font-bold gradient-text mb-2">SEO Audit Report</h1>
-          <p className="text-gray-400 break-all">{report?.url}</p>
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold gradient-text mb-2">SEO Audit Report</h1>
+          <p className="text-gray-400 break-all text-sm sm:text-base">{report?.url}</p>
         </div>
 
         {/* Overall Score */}
-        <div className={`glass-effect p-8 mb-8 animate-slide-in border-2 ${getScoreBg(report?.score)}`}>
+        <div className={`glass-effect p-4 sm:p-6 md:p-8 mb-8 animate-slide-in border-2 ${getScoreBg(report?.score)}`}>
           <div className="text-center">
-            <div className="flex items-center justify-center mb-4">
-              <div className="w-16 h-16 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center mr-4">
-                <AnalyticsIcon className="w-8 h-8 text-white" />
+            <div className="flex flex-col sm:flex-row items-center justify-center mb-4 gap-3 sm:gap-4">
+              <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center">
+                <AnalyticsIcon className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
               </div>
-              <h2 className="text-2xl font-semibold text-gray-200">Overall SEO Score</h2>
+              <h2 className="text-xl sm:text-2xl font-semibold text-gray-200">Overall SEO Score</h2>
             </div>
-            <div className={`text-7xl font-bold mb-4 ${getScoreColor(report?.score)}`}>
+            <div className={`text-5xl sm:text-6xl md:text-7xl font-bold mb-4 ${getScoreColor(report?.score)}`}>
               {report?.score || 0}
             </div>
             <div className="w-full bg-gray-800 rounded-full h-6 mt-4 overflow-hidden">
@@ -135,10 +146,10 @@ export default function AuditResult() {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* PageSpeed Insights */}
-          <div className="glass-effect p-6 animate-fade-in" style={{ animationDelay: '0.1s' }}>
-            <h3 className="text-2xl font-bold mb-6 flex items-center">
-              <div className="w-10 h-10 bg-blue-600/20 rounded-lg flex items-center justify-center mr-3">
-                <SpeedIcon className="w-6 h-6 text-blue-400" />
+          <div className="glass-effect p-4 sm:p-6 animate-fade-in" style={{ animationDelay: '0.1s' }}>
+            <h3 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 flex items-center">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-blue-600/20 rounded-lg flex items-center justify-center mr-2 sm:mr-3">
+                <SpeedIcon className="w-5 h-5 sm:w-6 sm:h-6 text-blue-400" />
               </div>
               PageSpeed Insights
             </h3>
@@ -187,34 +198,34 @@ export default function AuditResult() {
           </div>
 
           {/* Meta Information */}
-          <div className="glass-effect p-6 animate-fade-in" style={{ animationDelay: '0.2s' }}>
-            <h3 className="text-2xl font-bold mb-6 flex items-center">
-              <div className="w-10 h-10 bg-indigo-600/20 rounded-lg flex items-center justify-center mr-3">
-                <AnalyticsIcon className="w-6 h-6 text-indigo-400" />
+          <div className="glass-effect p-4 sm:p-6 animate-fade-in" style={{ animationDelay: '0.2s' }}>
+            <h3 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 flex items-center">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-indigo-600/20 rounded-lg flex items-center justify-center mr-2 sm:mr-3">
+                <AnalyticsIcon className="w-5 h-5 sm:w-6 sm:h-6 text-indigo-400" />
               </div>
               Meta Information
             </h3>
             <div className="space-y-4 text-sm">
-              <div className="bg-white/5 rounded-lg p-4">
+              <div className="bg-white/5 rounded-lg p-3 sm:p-4">
                 <span className="text-gray-400 block mb-2 text-xs uppercase tracking-wide">Title</span>
-                <span className="font-semibold text-white break-words">{report?.meta?.title || 'N/A'}</span>
+                <span className="font-semibold text-white break-words text-xs sm:text-sm">{report?.meta?.title || 'N/A'}</span>
               </div>
-              <div className="bg-white/5 rounded-lg p-4">
+              <div className="bg-white/5 rounded-lg p-3 sm:p-4">
                 <span className="text-gray-400 block mb-2 text-xs uppercase tracking-wide">Description</span>
-                <span className="font-semibold text-white break-words">{report?.meta?.metaDescription || 'N/A'}</span>
+                <span className="font-semibold text-white break-words text-xs sm:text-sm">{report?.meta?.metaDescription || 'N/A'}</span>
               </div>
-              <div className="bg-white/5 rounded-lg p-4">
+              <div className="bg-white/5 rounded-lg p-3 sm:p-4">
                 <span className="text-gray-400 block mb-2 text-xs uppercase tracking-wide">First H1</span>
-                <span className="font-semibold text-white break-words">{report?.meta?.firstH1 || 'N/A'}</span>
+                <span className="font-semibold text-white break-words text-xs sm:text-sm">{report?.meta?.firstH1 || 'N/A'}</span>
               </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="bg-white/5 rounded-lg p-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                <div className="bg-white/5 rounded-lg p-3 sm:p-4">
                   <span className="text-gray-400 block mb-2 text-xs uppercase tracking-wide">Status Code</span>
-                  <span className="font-semibold text-white">{report?.meta?.statusCode || 'N/A'}</span>
+                  <span className="font-semibold text-white text-xs sm:text-sm">{report?.meta?.statusCode || 'N/A'}</span>
                 </div>
-                <div className="bg-white/5 rounded-lg p-4">
+                <div className="bg-white/5 rounded-lg p-3 sm:p-4">
                   <span className="text-gray-400 block mb-2 text-xs uppercase tracking-wide">Missing Alt Tags</span>
-                  <span className="font-semibold text-white">{report?.meta?.imagesMissingAlt ?? 'N/A'}</span>
+                  <span className="font-semibold text-white text-xs sm:text-sm">{report?.meta?.imagesMissingAlt ?? 'N/A'}</span>
                 </div>
               </div>
               {report?.meta?.canonicalLinks && report.meta.canonicalLinks.length > 0 && (
@@ -232,10 +243,10 @@ export default function AuditResult() {
         </div>
 
         {/* SEO Suggestions */}
-        <div className="glass-effect p-8 mt-8 animate-fade-in" style={{ animationDelay: '0.3s' }}>
-          <h3 className="text-2xl font-bold mb-6 flex items-center">
-            <div className="w-10 h-10 bg-yellow-600/20 rounded-lg flex items-center justify-center mr-3">
-              <SuggestionIcon className="w-6 h-6 text-yellow-400" />
+        <div className="glass-effect p-4 sm:p-6 md:p-8 mt-8 animate-fade-in" style={{ animationDelay: '0.3s' }}>
+          <h3 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 flex items-center">
+            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-yellow-600/20 rounded-lg flex items-center justify-center mr-2 sm:mr-3">
+              <SuggestionIcon className="w-5 h-5 sm:w-6 sm:h-6 text-yellow-400" />
             </div>
             SEO Suggestions
           </h3>
@@ -302,31 +313,31 @@ export default function AuditResult() {
                     return (
                       <div
                         key={idx}
-                        className="bg-gradient-to-br from-white/5 to-white/0 rounded-xl p-6 border border-white/10 hover:border-yellow-500/30 transition-all animate-slide-in group"
+                        className="bg-gradient-to-br from-white/5 to-white/0 rounded-xl p-4 sm:p-6 border border-white/10 hover:border-yellow-500/30 transition-all animate-slide-in group"
                         style={{ animationDelay: `${0.4 + idx * 0.1}s` }}
                       >
-                        <div className="flex items-start gap-4">
+                        <div className="flex items-start gap-3 sm:gap-4">
                           {/* Number Badge */}
                           <div className="flex-shrink-0">
-                            <div className="w-12 h-12 bg-gradient-to-br from-yellow-500/20 to-orange-500/20 rounded-xl flex items-center justify-center font-bold text-yellow-400 border border-yellow-500/30 group-hover:scale-110 transition-transform">
+                            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-yellow-500/20 to-orange-500/20 rounded-xl flex items-center justify-center font-bold text-yellow-400 border border-yellow-500/30 group-hover:scale-110 transition-transform text-sm sm:text-base">
                               {idx + 1}
                             </div>
                           </div>
                           
                           {/* Content */}
                           <div className="flex-1 min-w-0">
-                            <h4 className="text-lg font-bold text-white mb-2 leading-tight">
+                            <h4 className="text-base sm:text-lg font-bold text-white mb-2 leading-tight">
                               {parsed.title}
                             </h4>
                             {parsed.description && (
-                              <p className="text-gray-400 leading-relaxed text-sm">
+                              <p className="text-gray-400 leading-relaxed text-xs sm:text-sm">
                                 {parsed.description}
                               </p>
                             )}
                           </div>
                           
                           {/* Icon */}
-                          <div className="flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
+                          <div className="hidden sm:flex flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
                             <div className="w-8 h-8 bg-yellow-500/10 rounded-lg flex items-center justify-center">
                               <svg className="w-5 h-5 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -356,18 +367,27 @@ export default function AuditResult() {
         </div>
 
         {/* Action Buttons */}
-        <div className="mt-8 flex flex-col md:flex-row justify-center gap-4">
+        <div className="mt-8 flex flex-col sm:flex-row justify-center gap-3 sm:gap-4">
+          <button
+            onClick={handleDownloadPDF}
+            className="px-6 sm:px-8 py-3 bg-gradient-to-r from-green-600 to-emerald-600 rounded-lg font-semibold hover:from-green-700 hover:to-emerald-700 transition-all transform hover:scale-105 shadow-lg flex items-center justify-center gap-2 text-sm sm:text-base"
+          >
+            <DownloadIcon className="w-5 h-5" />
+            <span className="hidden sm:inline">Download PDF Report</span>
+            <span className="sm:hidden">Download PDF</span>
+          </button>
           <button
             onClick={() => navigate('/')}
-            className="px-8 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg font-semibold hover:from-blue-700 hover:to-indigo-700 transition-all transform hover:scale-105 shadow-lg"
+            className="px-6 sm:px-8 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg font-semibold hover:from-blue-700 hover:to-indigo-700 transition-all transform hover:scale-105 shadow-lg text-sm sm:text-base"
           >
             Run Another Audit
           </button>
           <button
             onClick={() => navigate(`/services/boost?url=${encodeURIComponent(report?.url || '')}`)}
-            className="px-8 py-3 border border-white/20 rounded-lg font-semibold text-white hover:bg-white/10 transition-all"
+            className="px-6 sm:px-8 py-3 border border-white/20 rounded-lg font-semibold text-white hover:bg-white/10 transition-all text-sm sm:text-base"
           >
-            Get SEO Boost Services for Your Website
+            <span className="hidden sm:inline">Get SEO Boost Services for Your Website</span>
+            <span className="sm:hidden">Get SEO Services</span>
           </button>
         </div>
       </div>

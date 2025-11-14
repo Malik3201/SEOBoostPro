@@ -45,8 +45,8 @@ export default function AdminDashboard() {
               <DashboardIcon className="w-8 h-8 text-white" />
             </div>
             <div>
-              <h1 className="text-4xl md:text-5xl font-bold gradient-text mb-2">Admin Dashboard</h1>
-              <p className="text-gray-400">Manage your SEO audit platform</p>
+              <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold gradient-text mb-2">Admin Dashboard</h1>
+              <p className="text-gray-400 text-sm sm:text-base">Manage your SEO audit platform</p>
             </div>
           </div>
         </div>

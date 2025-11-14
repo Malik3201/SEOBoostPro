@@ -1,6 +1,5 @@
 import OpenAI from "openai";
 
-// Initialize Groq client
 const client = new OpenAI({
   apiKey: process.env.LLM_API_KEY,
   baseURL: process.env.LLM_ENDPOINT,
@@ -8,7 +7,6 @@ const client = new OpenAI({
 
 export async function generateSuggestions(report) {
   try {
-    // Create a response using Groq API
     const response = await client.responses.create({
       model: "openai/gpt-oss-20b",
       input: `Generate 5 SEO suggestions for the following data:\n${JSON.stringify(
@@ -16,14 +14,22 @@ export async function generateSuggestions(report) {
         null,
         2
       )}`,
-      // Optional parameters
       max_output_tokens: 300,
     });
 
-    // Groq response text
-    const outputText = response.output_text || "";
+    // Extract text from output array
+    let outputText = "";
+    for (const item of response.output || []) {
+      if (item.type === "message") {
+        for (const content of item.content || []) {
+          if (content.type === "output_text" && content.text) {
+            outputText += content.text + "\n";
+          }
+        }
+      }
+    }
 
-    // Split suggestions by line
+    // Split by lines and filter empty ones
     const suggestions = outputText.split("\n").filter((line) => line.trim());
 
     return suggestions;

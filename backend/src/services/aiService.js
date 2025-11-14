@@ -2,15 +2,17 @@ import OpenAI from "openai";
 
 // Initialize OpenAI client with Groq API endpoint
 const client = new OpenAI({
-  apiKey: process.env.LLM_API_KEY || process.env.GROQ_API_KEY || process.env.GROK_API_KEY,
-  baseURL: process.env.LLM_ENDPOINT || process.env.GROQ_ENDPOINT || process.env.GROK_ENDPOINT || "https://api.groq.com/openai/v1",
+  apiKey: process.env.LLM_API_KEY || process.env.GROQ_API_KEY,
+  baseURL: process.env.LLM_ENDPOINT || "https://api.groq.com/openai/v1",
 });
 
 export async function generateSuggestions(report) {
   try {
-    // Extract key information for suggestions
     const url = report.url || "the website";
-    const performanceScore = report.pageSpeed?.mobile?.performanceScore || report.pageSpeed?.desktop?.performanceScore || "N/A";
+    const performanceScore =
+      report.pageSpeed?.mobile?.performanceScore ||
+      report.pageSpeed?.desktop?.performanceScore ||
+      "N/A";
     const hasTitle = report.meta?.title ? "Yes" : "No";
     const hasDescription = report.meta?.metaDescription ? "Yes" : "No";
     const hasH1 = report.meta?.firstH1 ? "Yes" : "No";
@@ -29,60 +31,40 @@ HTTP Status Code: ${statusCode}
 
 Provide 5 SEO suggestions:`;
 
-    const response = await client.chat.completions.create({
-      model: process.env.GROQ_MODEL || process.env.GROK_MODEL || "openai/gpt-oss-20b",
-      messages: [
-        {
-          role: "system",
-          content: "You are an expert SEO consultant. Provide clear, actionable SEO improvement suggestions.",
-        },
-        {
-          role: "user",
-          content: prompt,
-        },
-      ],
-      max_tokens: 500,
+    // Use Groq Responses API
+    const response = await client.responses.create({
+      model: process.env.GROQ_MODEL || "openai/gpt-oss-20b",
+      input: prompt,
+      max_output_tokens: 500,
       temperature: 0.7,
     });
 
-    // Extract the response text
-    const responseText = response.choices?.[0]?.message?.content || "";
+    // Extract all output_text from response.output
+    let outputText = "";
+    for (const item of response.output || []) {
+      if (item.type === "message") {
+        for (const content of item.content || []) {
+          if (content.type === "output_text" && content.text) {
+            outputText += content.text + "\n";
+          }
+        }
+      }
+    }
 
-    if (!responseText) {
+    if (!outputText) {
       console.warn("Empty response from AI service");
       return [];
     }
 
     // Parse suggestions - split by lines and filter
-    let suggestions = responseText
+    const suggestions = outputText
       .split("\n")
       .map((line) => line.trim())
-      .filter((line) => {
-        // Keep lines that look like suggestions (start with number, bullet, or dash)
-        return (
-          line.length > 10 &&
-          (line.match(/^\d+\./) || line.match(/^[-•*]/) || line.length > 20)
-        );
-      })
-      .map((line) => {
-        // Remove numbering/bullets if present
-        return line.replace(/^\d+\.\s*/, "").replace(/^[-•*]\s*/, "").trim();
-      })
-      .filter((line) => line.length > 0);
+      .filter((line) => line.length > 10)
+      .map((line) => line.replace(/^\d+\.\s*/, "").trim())
+      .slice(0, 5); // Limit to 5 suggestions
 
-    // If we got suggestions, return them (limit to 5)
-    if (suggestions.length > 0) {
-      return suggestions.slice(0, 5);
-    }
-
-    // Fallback: try to extract any meaningful text
-    const fallbackSuggestions = responseText
-      .split(/\n+/)
-      .map((line) => line.trim())
-      .filter((line) => line.length > 15 && line.length < 200)
-      .slice(0, 5);
-
-    return fallbackSuggestions.length > 0 ? fallbackSuggestions : [];
+    return suggestions;
   } catch (err) {
     console.error("generateSuggestions error:", err);
     console.error("Error details:", {
@@ -90,7 +72,6 @@ Provide 5 SEO suggestions:`;
       status: err.status,
       response: err.response?.data,
     });
-    // Return empty array instead of throwing to not break the audit
     return [];
   }
 }

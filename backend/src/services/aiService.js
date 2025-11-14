@@ -1,62 +1,34 @@
-import { GoogleAuth } from "google-auth-library";
-import fetch from "node-fetch";
-import path from "path";
+import OpenAI from "openai";
 
-const keyFilePath = path.join(
-  process.cwd(),
-  "backend/keys/seoboostpro-797255167c1b.json"
-); // adjust path
-
-async function getAccessToken() {
-  try {
-    const auth = new GoogleAuth({
-      keyFile: keyFilePath,
-      scopes: ["https://www.googleapis.com/auth/ai.generativelanguage"],
-    });
-
-    const client = await auth.getClient();
-    const token = await client.getAccessToken();
-    if (!token || !token.token) throw new Error("No access token returned");
-    return token.token;
-  } catch (err) {
-    console.error("getAccessToken error:", err);
-    throw new Error("Authentication failed for LLM service");
-  }
-}
+// Initialize Groq client
+const client = new OpenAI({
+  apiKey: process.env.LLM_API_KEY,
+  baseURL: process.env.LLM_ENDPOINT,
+});
 
 export async function generateSuggestions(report) {
   try {
-    const accessToken = await getAccessToken();
-
-    const response = await fetch(process.env.LLM_ENDPOINT, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${accessToken}`,
-      },
-      body: JSON.stringify({
-        // Gemini request body
-        prompt: `Generate 5 SEO suggestions for the following data:\n${JSON.stringify(
-          report,
-          null,
-          2
-        )}`,
-        maxOutputTokens: 300,
-      }),
+    // Create a response using Groq API
+    const response = await client.responses.create({
+      model: "openai/gpt-oss-20b",
+      input: `Generate 5 SEO suggestions for the following data:\n${JSON.stringify(
+        report,
+        null,
+        2
+      )}`,
+      // Optional parameters
+      max_output_tokens: 300,
     });
 
-    if (!response.ok) {
-      const errText = await response.text();
-      console.error("LLM request failed:", errText);
-      throw new Error("LLM request failed");
-    }
+    // Groq response text
+    const outputText = response.output_text || "";
 
-    const data = await response.json();
-    // Adjust based on Gemini output structure
-    const suggestions = data.candidates?.[0]?.content?.split("\n") || [];
+    // Split suggestions by line
+    const suggestions = outputText.split("\n").filter((line) => line.trim());
+
     return suggestions;
   } catch (err) {
     console.error("generateSuggestions error:", err);
-    throw new Error("Failed to generate SEO suggestions");
+    throw new Error("Failed to generate SEO suggestions with Groq API");
   }
 }

@@ -15,6 +15,7 @@ const allowedOrigins = [
   process.env.FRONTEND_BASE_URL,
   'http://localhost:5173',
   'https://localhost:5173',
+  'https://seoboostpro.netlify.app/',
 ].filter(Boolean);
 
 const app = express();

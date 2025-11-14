@@ -1,9 +1,9 @@
 import OpenAI from "openai";
 
-// Initialize OpenAI client with Grok AI endpoint
+// Initialize OpenAI client with Groq API endpoint
 const client = new OpenAI({
-  apiKey: process.env.LLM_API_KEY || process.env.GROK_API_KEY,
-  baseURL: process.env.LLM_ENDPOINT || process.env.GROK_ENDPOINT || "https://api.x.ai/v1",
+  apiKey: process.env.LLM_API_KEY || process.env.GROQ_API_KEY || process.env.GROK_API_KEY,
+  baseURL: process.env.LLM_ENDPOINT || process.env.GROQ_ENDPOINT || process.env.GROK_ENDPOINT || "https://api.groq.com/openai/v1",
 });
 
 export async function generateSuggestions(report) {
@@ -30,7 +30,7 @@ HTTP Status Code: ${statusCode}
 Provide 5 SEO suggestions:`;
 
     const response = await client.chat.completions.create({
-      model: process.env.GROK_MODEL || "grok-beta",
+      model: process.env.GROQ_MODEL || process.env.GROK_MODEL || "openai/gpt-oss-20b",
       messages: [
         {
           role: "system",

@@ -17,7 +17,26 @@ export const getReportById = async (req, res) => {
       return res.status(404).json({ message: 'Report not found.' });
     }
 
-    return res.json(report);
+    // Ensure suggestions is always an array
+    const reportData = report.toObject ? report.toObject() : report;
+    if (!Array.isArray(reportData.suggestions)) {
+      if (typeof reportData.suggestions === 'string') {
+        reportData.suggestions = reportData.suggestions
+          .split('\n')
+          .map(s => s.trim())
+          .filter(s => s.length > 0);
+      } else {
+        reportData.suggestions = reportData.suggestions || [];
+      }
+    }
+
+    // Debug logging
+    console.log('Report ID:', id);
+    console.log('Suggestions count:', reportData.suggestions?.length || 0);
+    console.log('Suggestions type:', typeof reportData.suggestions);
+    console.log('First suggestion:', reportData.suggestions?.[0]);
+
+    return res.json(reportData);
   } catch (error) {
     console.error('getReportById error:', error);
     return res.status(500).json({

@@ -15,8 +15,30 @@ export default function AuditResult() {
     const fetchReport = async () => {
       try {
         const response = await reportAPI.getReportById(id);
-        setReport(response.data);
+        const reportData = response.data;
+        
+        // Debug: Log suggestions to see what we're getting
+        console.log('Report data:', reportData);
+        console.log('Suggestions:', reportData?.suggestions);
+        console.log('Suggestions type:', typeof reportData?.suggestions);
+        console.log('Suggestions is array:', Array.isArray(reportData?.suggestions));
+        
+        // Ensure suggestions is always an array
+        if (reportData && !Array.isArray(reportData.suggestions)) {
+          if (typeof reportData.suggestions === 'string') {
+            // If it's a string, try to split it
+            reportData.suggestions = reportData.suggestions
+              .split('\n')
+              .map(s => s.trim())
+              .filter(s => s.length > 0);
+          } else {
+            reportData.suggestions = [];
+          }
+        }
+        
+        setReport(reportData);
       } catch (err) {
+        console.error('Error fetching report:', err);
         setError(err.response?.data?.message || 'Failed to load report');
       } finally {
         setLoading(false);
@@ -217,24 +239,45 @@ export default function AuditResult() {
             </div>
             SEO Suggestions
           </h3>
-          {report?.suggestions && report.suggestions.length > 0 ? (
-            <div className="space-y-4">
-              {report.suggestions.map((suggestion, idx) => (
-                <div
-                  key={idx}
-                  className="bg-white/5 rounded-lg p-4 flex items-start animate-slide-in"
-                  style={{ animationDelay: `${0.4 + idx * 0.1}s` }}
-                >
-                  <span className="flex-shrink-0 w-8 h-8 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center font-bold mr-4 text-white">
-                    {idx + 1}
-                  </span>
-                  <p className="text-gray-300 pt-1 leading-relaxed">{suggestion}</p>
+          {(() => {
+            // Normalize suggestions - ensure it's an array
+            const suggestions = Array.isArray(report?.suggestions) 
+              ? report.suggestions.filter(s => s && String(s).trim().length > 0)
+              : [];
+            
+            if (suggestions.length > 0) {
+              return (
+                <div className="space-y-4">
+                  {suggestions.map((suggestion, idx) => {
+                    const suggestionText = String(suggestion).trim();
+                    if (!suggestionText) return null;
+                    
+                    return (
+                      <div
+                        key={idx}
+                        className="bg-white/5 rounded-lg p-4 flex items-start animate-slide-in"
+                        style={{ animationDelay: `${0.4 + idx * 0.1}s` }}
+                      >
+                        <span className="flex-shrink-0 w-8 h-8 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center font-bold mr-4 text-white">
+                          {idx + 1}
+                        </span>
+                        <p className="text-gray-300 pt-1 leading-relaxed">{suggestionText}</p>
+                      </div>
+                    );
+                  })}
                 </div>
-              ))}
-            </div>
-          ) : (
-            <p className="text-gray-400 text-center py-8">No suggestions available.</p>
-          )}
+              );
+            }
+            
+            return (
+              <div className="text-center py-8">
+                <p className="text-gray-400 mb-2">No suggestions available.</p>
+                <p className="text-gray-500 text-sm">
+                  Suggestions are generated using AI analysis. If this persists, the AI service may be temporarily unavailable.
+                </p>
+              </div>
+            );
+          })()}
         </div>
 
         {/* Action Buttons */}

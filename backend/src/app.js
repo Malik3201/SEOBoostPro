@@ -42,6 +42,10 @@ app.use((req, res, next) => {
   next(error);
 });
 
+app.get("/", (req,res)=>{
+  res.json("SERVER STARTED SUCCESSFULLY")
+})
+
 app.use((err, req, res, next) => {
   const status = err.status || 500;
   res.status(status).json({

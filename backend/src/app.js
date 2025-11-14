@@ -15,20 +15,41 @@ const allowedOrigins = [
   process.env.FRONTEND_BASE_URL,
   'http://localhost:5173',
   'https://localhost:5173',
-  'https://seoboostpro.netlify.app/',
+  'https://seoboostpro.netlify.app',
+  'http://localhost:3000',
+  'http://localhost:5174',
 ].filter(Boolean);
+
+// Normalize origins (remove trailing slashes)
+const normalizedOrigins = allowedOrigins.map(origin => origin.replace(/\/$/, ''));
 
 const app = express();
 
 app.use(
   cors({
     origin: (origin, callback) => {
-      if (!origin || allowedOrigins.includes(origin)) {
+      // Allow requests with no origin (like mobile apps or curl requests)
+      if (!origin) {
         return callback(null, true);
       }
+      
+      // Normalize the origin (remove trailing slash)
+      const normalizedOrigin = origin.replace(/\/$/, '');
+      
+      // Check if origin is in allowed list
+      if (normalizedOrigins.includes(normalizedOrigin)) {
+        return callback(null, true);
+      }
+      
+      // Log for debugging
+      console.log('CORS blocked origin:', origin);
+      console.log('Allowed origins:', normalizedOrigins);
+      
       return callback(new Error('Not allowed by CORS'));
     },
     credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
   })
 );
 app.use(express.json());
